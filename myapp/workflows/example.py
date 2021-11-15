@@ -43,6 +43,7 @@ def say_hello() -> str:
 @workflow
 def my_wf() -> str:
     res = say_hello()
+    print("hello")
     return res
 
 

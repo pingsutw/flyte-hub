@@ -1,0 +1,7 @@
+iamRoleARN: ""
+inputs: {}
+kubeServiceAcct: ""
+targetDomain: ""
+targetProject: ""
+version: v4
+workflow: dataset.workflows.example.wf
