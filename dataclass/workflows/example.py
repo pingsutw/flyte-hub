@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 
 from flytekit import task, workflow
-from flytekit.types.file import FlyteFile
 
 
 @dataclass_json
@@ -12,14 +11,17 @@ class FileStruct(object):
     a: str
     b: str
 
+
 @task
 def creat_file(path: str) -> FileStruct:
     fs = FileStruct(a=path, b=path)
     return fs
 
+
 @task
 def get_file_path(fs: FileStruct) -> str:
     return fs.a
+
 
 @workflow
 def base_wf(path: str) -> str:

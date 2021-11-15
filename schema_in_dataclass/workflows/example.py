@@ -28,5 +28,3 @@ def some_task() -> SomeResult:
 @workflow
 def some_workflow() -> SomeResult:
     return some_task()
-
-some_workflow()

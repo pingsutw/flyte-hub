@@ -24,8 +24,8 @@ COPY ./requirements.txt /root
 RUN pip install -r /root/requirements.txt
 
 # RUN git clone https://github.com/flyteorg/flytekit.git && cd flytekit && git checkout remote-register1 && pip install . && cd ..
-#RUN git clone https://github.com/pingsutw/flytekit.git && cd flytekit && git checkout schema-arrow && pip install . && cd ..
-#RUN git clone https://github.com/pingsutw/flyteidl.git && cd flyteidl && git checkout new-schema && pip install . && cd ..
+# RUN git clone https://github.com/pingsutw/flytekit.git && cd flytekit && git checkout schema-arrow && pip install . && cd ..
+# RUN git clone https://github.com/pingsutw/flyteidl.git && cd flyteidl && git checkout new-schema && pip install . && cd ..
 RUN pip install fsspec google-cloud-bigquery-storage google-cloud-bigquery s3fs
 COPY ./gcp.json /opt
 ENV GOOGLE_APPLICATION_CREDENTIALS "/opt/gcp.json"

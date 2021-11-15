@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 REGISTRY='pingsutw'
 IMAGE='myapp'
@@ -35,7 +35,7 @@ start_example () {
   docker build . --tag "${IMAGE_NAME}" # --no-cache
   docker push ${IMAGE_NAME}
   pyflyte --pkgs ${APP_NAME} package --image ${IMAGE_NAME} --force
-  flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version ${VERSION}
+  flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version ${VERSION} --config ~/.flyte/config.yaml
 }
 
 start_example
