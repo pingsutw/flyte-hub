@@ -139,5 +139,4 @@ flyte-package.tgz
 .bash_history
 .flyte
 .kube
-gcp.json
 test*/

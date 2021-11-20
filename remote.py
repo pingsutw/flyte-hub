@@ -14,7 +14,6 @@ import dynamic.workflows.example
 import flyte_pickle.workflows.example
 import long_list.workflows.example
 import map_task.workflows.example
-import mpi_job.workflows.example
 import myapp.workflows.example
 import named_tuple.workflows.example
 import subworkflow.workflows.example
@@ -23,7 +22,7 @@ import subworkflow.workflows.example
 start = time.time()
 
 version = UUID(int=random.getrandbits(128)).hex
-image_name = "pingsutw/all"
+image_name = "pingsutw/flyte-app"
 
 # Build and push images
 bashCommand = f"docker build . --tag {image_name}:{version} --no-cache"

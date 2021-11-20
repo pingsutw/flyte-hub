@@ -14,16 +14,29 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
-      - name: Push Docker Image to Github Registry
+      - name: Push flyte-app Docker Image to Github Registry
         uses: whoan/docker-build-with-cache-action@v5
         with:
           # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-          username: "${{ secrets.FLYTE_BOT_USERNAME }}"
-          password: "${{ secrets.FLYTE_BOT_PAT }}"
-          image_name: ${{ github.repository_owner }}/flytekit-python-template
-          image_tag: latest,${{ github.sha }}
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: ${{ github.repository_owner }}/flyte-app
+          image_tag: latest
           push_git_tag: true
-          registry: ghcr.io
+          registry: docker.io
           build_extra_args: "--compress=true"
           context: ./
           dockerfile: Dockerfile
+      - name: Push base-flyte-app Docker Image to Github Registry
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: ${{ github.repository_owner }}/base-flyte-app
+          image_tag: latest
+          push_git_tag: true
+          registry: docker.io
+          build_extra_args: "--compress=true"
+          context: ./
+          dockerfile: base.Dockerfile
