@@ -34,7 +34,7 @@ remote, version = create_flyte_remote(fast=True, cached_image=False, url=FlyteCl
 # remote.execute(long_list.workflows.example.my_wf, inputs={"n": 5}, version=version, wait=False)
 # remote.execute(map_task1.workflows-.example.my_map_workflow, inputs={"a": 3}, version=version, wait=False)
 # remote.execute(map_task_in_place.workflows.example.my_wf, inputs={"a": 2, "b": "hello"}, version=version, wait=False)
-remote.execute(myapp.workflows.example.my_wf, inputs={}, version=version, wait=True)
+remote.execute(myapp.workflows.example.my_wf, inputs={}, version=version, wait=False)
 # remote.execute(named_tuple.workflows.example.my_wf, inputs={"a": 3, "b": "2"}, version=version, wait=False)
 # remote.execute(snowflake.workflows.example.no_io_wf, inputs={}, wait=True)
 # remote.execute(structured_dataset.workflows.example.wf, inputs={}, wait=True)
