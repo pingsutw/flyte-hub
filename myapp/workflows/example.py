@@ -19,8 +19,8 @@ from flytekit import task, workflow
 # You can change the signature of the task to take in an argument like this:
 # def say_hello(name: str) -> str:
 @task
-def say_hello() -> str:
-    return "hello world"
+def say_hello1() -> int:
+    return 1
 
 
 # %%
@@ -41,8 +41,8 @@ def say_hello() -> str:
 # You can change the signature of the workflow to take in an argument like this:
 # def my_wf(name: str) -> str:
 @workflow
-def my_wf() -> str:
-    res = say_hello()
+def my_wf() -> int:
+    res = say_hello1()
     return res
 
 
@@ -57,4 +57,3 @@ def my_wf() -> str:
 #   will result in an error
 if __name__ == "__main__":
     print(f"Running my_wf() {my_wf()}")
-

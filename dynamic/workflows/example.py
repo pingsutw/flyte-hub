@@ -3,7 +3,7 @@ import typing
 from flytekit import dynamic, task, workflow
 
 
-@task
+@task()
 def return_index(character: str) -> int:
     """
     Computes the character index (which needs to fit into the 26 characters list)"""
@@ -13,7 +13,7 @@ def return_index(character: str) -> int:
         return ord(character) - ord("A")
 
 
-@task
+@task()
 def update_list(freq_list: typing.List[int], list_index: int) -> typing.List[int]:
     """
     Notes the frequency of characters"""
@@ -21,7 +21,7 @@ def update_list(freq_list: typing.List[int], list_index: int) -> typing.List[int
     return freq_list
 
 
-@task
+@task()
 def derive_count(freq1: typing.List[int], freq2: typing.List[int]) -> int:
     """
     Derives the number of common characters"""

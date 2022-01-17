@@ -2,6 +2,7 @@ import random
 
 from flytekit import conditional, task, workflow
 
+
 @task
 def square(n: float) -> float:
     """
@@ -30,10 +31,10 @@ def double(n: float) -> float:
 def multiplier(my_input: float) -> float:
     return (
         conditional("fractions")
-            .if_((my_input >= 0.1) & (my_input <= 1.0))
-            .then(double(n=my_input))
-            .else_()
-            .then(square(n=my_input))
+        .if_((my_input >= 0.1) & (my_input <= 1.0))
+        .then(double(n=my_input))
+        .else_()
+        .then(square(n=my_input))
     )
 
 

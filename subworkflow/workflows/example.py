@@ -1,5 +1,6 @@
 import typing
 from typing import Tuple
+
 from flytekit import task, workflow
 
 op = typing.NamedTuple("OutputsBC", t1_int_output=int, c=str)

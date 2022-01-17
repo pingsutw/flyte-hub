@@ -21,4 +21,3 @@ def wf(a: int) -> typing.Union[int, str]:
 
 if __name__ == "__main__":
     print(f"Running my_wf() {wf(a=500)}")
-

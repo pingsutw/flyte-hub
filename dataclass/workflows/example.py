@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from dataclasses_json import dataclass_json
-
 from flytekit import task, workflow
 
 
@@ -32,5 +31,3 @@ def base_wf(path: str) -> str:
 if __name__ == "__main__":
     print("Flyte File in dataclass")
     base_wf(path="/tmp/hello.txt")
-
-

@@ -1,6 +1,7 @@
-from flytekit import task, workflow
-from typing import Tuple
 from enum import Enum
+from typing import Tuple
+
+from flytekit import task, workflow
 
 
 class Color(Enum):

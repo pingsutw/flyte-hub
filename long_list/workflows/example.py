@@ -27,4 +27,3 @@ def my_wf(n: int) -> List[List[int]]:
 
 if __name__ == "__main__":
     print(f"Running my_wf() {my_wf(n=500)}")
-
