@@ -5,7 +5,7 @@ from flytekit import TaskMetadata, map_task, task, workflow
 
 @task
 def a_mappable_task(a: int) -> str:
-    inc = a + 2
+    inc = a + 3
     stringified = str(inc)
     return stringified
 
