@@ -1,6 +1,6 @@
+import pandas as pd
 from flytekit import task, workflow
 from flytekit.core.node_creation import create_node
-import pandas as pd
 
 DATABASE = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv"
 

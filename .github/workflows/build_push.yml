@@ -1,12 +1,16 @@
-name: Build and Push Docker Images
+name: End-to-End testing
 
 on:
   push: 
 
 jobs:
   push-github:
-    name: Push to GHCR
+    name: Push to docker hub
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base-image-version: ["python3.7", "python3.8", "python3.9", "python3.10", "spark"]
     defaults:
       run:
         working-directory: ./
@@ -14,29 +18,37 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
-      - name: Push flyte-app Docker Image to Github Registry
-        uses: whoan/docker-build-with-cache-action@v5
-        with:
-          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: ${{ github.repository_owner }}/flyte-app
-          image_tag: latest
-          push_git_tag: true
-          registry: docker.io
-          build_extra_args: "--compress=true"
-          context: ./
-          dockerfile: Dockerfile
       - name: Push base-flyte-app Docker Image to Github Registry
         uses: whoan/docker-build-with-cache-action@v5
         with:
           # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: ${{ github.repository_owner }}/base-flyte-app
+          image_name: ${{ github.repository_owner }}/base-${{ matrix.base-image-version }}-flyte-app
           image_tag: latest
           push_git_tag: true
           registry: docker.io
           build_extra_args: "--compress=true"
           context: ./
-          dockerfile: base.Dockerfile
+          dockerfile: docker-image/base-${{ matrix.base-image-version }}.Dockerfile
+      - name: Push flyte-app Docker Image to Github Registry
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: ${{ github.repository_owner }}/flyte-app-${{ matrix.base-image-version }}
+          image_tag: latest
+          push_git_tag: true
+          registry: docker.io
+          build_extra_args: "--compress=true --build-arg=BASE_IMAGE_VERSION=${{ matrix.base-image-version }}"
+          context: ./
+          dockerfile: docker-image/Dockerfile
+      - name: Start flyte sandbox
+        run: curl -sL https://ctl.flyte.org/install | bash && ./bin/flytectl sandbox start
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Register and execute workflow on flyte cluster
+        run: pip install -r requirements.txt && python production_workflow.py

@@ -1,6 +1,7 @@
 import typing
 
-from flytekit import task, workflow, LaunchPlan
+from flytekit import LaunchPlan, task, workflow
+
 
 @task
 def t1(a: int) -> typing.NamedTuple("OutputsBC", t1_int_output=int, c=str):

@@ -27,9 +27,7 @@ def create_list(n: int) -> typing.List[int]:
 @workflow
 def my_map_workflow(a: int) -> str:
     l = create_list(n=a)
-    mapped_out = map_task(
-        a_mappable_task, metadata=TaskMetadata(retries=1), concurrency=10
-    )(a=l)
+    mapped_out = map_task(a_mappable_task, metadata=TaskMetadata(retries=1))(a=l)
     coalesced = coalesce(b=mapped_out)
     return coalesced
 

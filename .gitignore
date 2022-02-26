@@ -140,3 +140,4 @@ flyte-package.tgz
 .flyte
 .kube
 test*/
+gcp.json
