@@ -1,26 +1,43 @@
 import json
 import random
 import subprocess
+import time
+import typing
+from pathlib import Path
 from uuid import UUID
 
 import flytekit.remote
-from flytekit.core.context_manager import Image, ImageConfig
+from flytekit.configuration import ImageConfig, Image, Config, PlatformConfig, SerializationSettings
 from flytekit.remote import FlyteRemote
 
 from constants import FlyteCluster
+
+IMAGE_NAME = "pingsutw/flyte-app"
+CHECKPOINT = "checkpoints.json"
+
+
+def register_and_create_wf(fn):
+    start = time.time()
+
+    remote, ss = create_flyte_remote(fast=True, cached_image=False)
+    remote.register_workflow(fn, ss)
+    remote.execute(fn, inputs={}, wait=False)
+
+    end = time.time()
+    print("Time Spend:", end - start)
 
 
 def create_flyte_remote(
     fast: bool = False,
     cached_image: bool = False,
-    url: FlyteCluster = FlyteCluster.local,
-) -> (flytekit.remote.FlyteRemote, str):
-    image_name = "pingsutw/flyte-app"
+    config: str = "/Users/kevin/.flyte/config.yaml",
+) -> (flytekit.remote.FlyteRemote, SerializationSettings):
+
     version = UUID(int=random.getrandbits(128)).hex
 
     if fast is False:
-        _, err = build_image(image_name, version, cached_image)
-        push_image(image_name, version)
+        _, err = build_image(IMAGE_NAME, version, cached_image)
+        push_image(IMAGE_NAME, version)
         log_version(version)
     else:
         # Ignore building docker image, and use version in checkpoint
@@ -28,15 +45,14 @@ def create_flyte_remote(
 
     return (
         FlyteRemote(
-            flyte_admin_url=url.value,
-            insecure=True,
+            config=Config.auto(config),
             default_project="flytesnacks",
-            default_domain="development",
-            image_config=ImageConfig(
-                default_image=Image(name="default", fqn=image_name, tag=version)
-            ),
+            default_domain="development"
         ),
-        version,
+        SerializationSettings(
+            image_config=ImageConfig(default_image=Image(name="default", fqn=IMAGE_NAME, tag=version)),
+            version=version,
+        ),
     )
 
 
@@ -57,13 +73,13 @@ def push_image(image_name: str, version: str):
 
 
 def log_version(version: str):
-    with open("checkpoints.json", "r") as jsonfile:
+    with open(CHECKPOINT, "r") as jsonfile:
         checkpoints = json.load(jsonfile)
         checkpoints["image_version"] = version
-        with open("checkpoints.json", "w") as output_file:
+        with open(CHECKPOINT, "w") as output_file:
             output_file.write(json.dumps(checkpoints))
 
 
 def read_version() -> str:
-    with open("checkpoints.json", "r") as json_file:
+    with open(CHECKPOINT, "r") as json_file:
         return json.load(json_file)["image_version"]

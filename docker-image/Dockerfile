@@ -8,10 +8,10 @@ COPY ./ /root
 
 ENV FLYTE_SDK_USE_STRUCTURED_DATASET=True
 
-# RUN pip install flytekit==0.26.1
+RUN pip install markdown plotly pandas_profiling
 
-ARG BRANCH=master
-ARG PLUGIN=flytekit-aws-batch
+ARG BRANCH=remote-deck
+ARG PLUGIN=flytekit-deck-standard
 
 # Install custom package
 RUN git clone https://github.com/flyteorg/flytekit.git && cd flytekit \

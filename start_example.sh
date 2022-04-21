@@ -38,7 +38,7 @@ start_example () {
   docker build . -f docker-image/Dockerfile --tag "${IMAGE_NAME}" # --no-cache
   docker push ${IMAGE_NAME}
   pyflyte --pkgs ${APP_NAME} package --image ${IMAGE_NAME} --force
-  flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version ${VERSION} --config ~/.flyte/config-sandbox.yaml
+  flytectl register files --project flyteexamples --domain development --archive flyte-package.tgz --version ${VERSION} --config ~/.flyte/config.yaml
 }
 
 start_example

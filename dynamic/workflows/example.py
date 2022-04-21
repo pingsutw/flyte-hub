@@ -1,4 +1,5 @@
 import typing
+from time import sleep
 
 from flytekit import dynamic, task, workflow
 
@@ -7,6 +8,7 @@ from flytekit import dynamic, task, workflow
 def return_index(character: str) -> int:
     """
     Computes the character index (which needs to fit into the 26 characters list)"""
+    sleep(1)
     if character.islower():
         return ord(character) - ord("a")
     else:
@@ -17,6 +19,7 @@ def return_index(character: str) -> int:
 def update_list(freq_list: typing.List[int], list_index: int) -> typing.List[int]:
     """
     Notes the frequency of characters"""
+    sleep(10)
     freq_list[list_index] += 1
     return freq_list
 

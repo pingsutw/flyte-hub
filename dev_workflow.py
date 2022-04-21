@@ -1,13 +1,4 @@
-import time
-
-from constants import FlyteCluster
-from utils import create_flyte_remote
-
-start = time.time()
-
-remote, version = create_flyte_remote(
-    fast=False, cached_image=False, url=FlyteCluster.local
-)
+from utils import register_and_create_wf
 
 # Work in progress
 # import conditional.workflows.example
@@ -22,11 +13,8 @@ remote, version = create_flyte_remote(
 # remote.execute(dynamic.workflows.example.wf, inputs={"s1": "1", "s2": "2"}, version=version, wait=False)
 # import enum_types.workflows.example
 # remote.execute(enum_types.workflows.example.enum_wf, inputs={"c": "RED"}, wait=False)
+# import raw_container.workflows.example
+# remote.execute(raw_container.workflows.example.wf, inputs={"a": 2.0, "b": 3.0}, wait=False)
 import test.workflows.example
 
-remote.execute(
-    test.workflows.example.the_workflow, inputs={"dir": "/tmp/test"}, wait=False
-)
-
-end = time.time()
-print("Time Spend:", end - start)
+register_and_create_wf(test.workflows.example.wf)
