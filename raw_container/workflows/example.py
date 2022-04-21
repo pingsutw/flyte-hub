@@ -1,6 +1,6 @@
 import logging
-from flytekit import task, workflow
-from flytekit import ContainerTask, kwtypes, workflow
+
+from flytekit import ContainerTask, kwtypes, task, workflow
 
 logger = logging.getLogger(__file__)
 

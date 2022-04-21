@@ -1,5 +1,3 @@
-from utils import register_and_create_wf
-
 # Work in progress
 # import conditional.workflows.example
 # remote.execute(conditional.workflows.example.multiplier, inputs={"my_input", 3.0}, wait=False)
@@ -16,5 +14,7 @@ from utils import register_and_create_wf
 # import raw_container.workflows.example
 # remote.execute(raw_container.workflows.example.wf, inputs={"a": 2.0, "b": 3.0}, wait=False)
 import test.workflows.example
+
+from utils import register_and_create_wf
 
 register_and_create_wf(test.workflows.example.wf)

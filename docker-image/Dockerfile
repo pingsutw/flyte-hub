@@ -11,10 +11,10 @@ ENV FLYTE_SDK_USE_STRUCTURED_DATASET=True
 RUN pip install markdown plotly pandas_profiling
 
 ARG BRANCH=remote-deck
-ARG PLUGIN=flytekit-deck-standard
+ARG PLUGIN=deck-standard
+ARG IDL_BRANCH=deck
 
 # Install custom package
-RUN git clone https://github.com/flyteorg/flytekit.git && cd flytekit \
-    && git checkout $BRANCH && pip install . && \
-   cd plugins/$PLUGIN && pip install --no-deps -e . && cd ..
-
+RUN pip install "git+https://github.com/flyteorg/flytekit@$BRANCH#egg=flytekitplugins-$PLUGIN&subdirectory=plugins/flytekit-$PLUGIN"
+RUN pip install git+https://github.com/flyteorg/flyteidl@$IDL_BRANCH
+RUN pip install git+https://github.com/flyteorg/flytekit@$BRANCH

@@ -2,15 +2,17 @@ import json
 import random
 import subprocess
 import time
-import typing
-from pathlib import Path
 from uuid import UUID
 
 import flytekit.remote
-from flytekit.configuration import ImageConfig, Image, Config, PlatformConfig, SerializationSettings
+from flytekit.configuration import (
+    Config,
+    Image,
+    ImageConfig,
+    PlatformConfig,
+    SerializationSettings,
+)
 from flytekit.remote import FlyteRemote
-
-from constants import FlyteCluster
 
 IMAGE_NAME = "pingsutw/flyte-app"
 CHECKPOINT = "checkpoints.json"
@@ -19,7 +21,7 @@ CHECKPOINT = "checkpoints.json"
 def register_and_create_wf(fn):
     start = time.time()
 
-    remote, ss = create_flyte_remote(fast=True, cached_image=False)
+    remote, ss = create_flyte_remote(fast=False, cached_image=False)
     remote.register_workflow(fn, ss)
     remote.execute(fn, inputs={}, wait=False)
 
@@ -47,10 +49,12 @@ def create_flyte_remote(
         FlyteRemote(
             config=Config.auto(config),
             default_project="flytesnacks",
-            default_domain="development"
+            default_domain="development",
         ),
         SerializationSettings(
-            image_config=ImageConfig(default_image=Image(name="default", fqn=IMAGE_NAME, tag=version)),
+            image_config=ImageConfig(
+                default_image=Image(name="default", fqn=IMAGE_NAME, tag=version)
+            ),
             version=version,
         ),
     )

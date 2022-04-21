@@ -15,10 +15,12 @@ import dynamic.workflows.example
 import flytetype_in_dataclass.workflows.example
 import long_list.workflows.example
 import map_task.workflows.example
+
 # import map_task_in_place.workflows.example
 import myapp.workflows.example
 import named_tuple.workflows.example
 import secret_demo.workflows.example
+
 # import snowflake.workflows.example
 import structured_dataset.workflows.example
 import subworkflow.workflows.example
@@ -26,13 +28,15 @@ from constants import FlyteCluster
 from utils import create_flyte_remote
 
 start = time.time()
-remote, version = create_flyte_remote(fast=False, cached_image=False, url=FlyteCluster.local)
+remote, version = create_flyte_remote(
+    fast=False, cached_image=False, url=FlyteCluster.local
+)
 ss = SerializationSettings(
-                image_config=remote.config.image_config,
-                project=remote.default_project,
-                domain=remote.default_domain,
-                version=version,
-            )
+    image_config=remote.config.image_config,
+    project=remote.default_project,
+    domain=remote.default_domain,
+    version=version,
+)
 # Benchmark tests
 # remote.execute(benchmark.workflows.map_task.my_map_workflow, inputs={"a": 10}, version=version, wait=False)
 
