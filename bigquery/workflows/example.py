@@ -4,8 +4,6 @@ BigQuery Query
 
 This example shows how to use a Flyte BigQueryTask to execute a query.
 """
-from typing import cast
-
 import pandas as pd
 from flytekit import StructuredDataset, kwtypes, task, workflow
 from flytekitplugins.bigquery import BigQueryConfig, BigQueryTask

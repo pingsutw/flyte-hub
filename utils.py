@@ -2,6 +2,7 @@ import json
 import random
 import subprocess
 import time
+import typing
 from uuid import UUID
 
 import flytekit.remote
@@ -9,21 +10,21 @@ from flytekit.configuration import (
     Config,
     Image,
     ImageConfig,
-    PlatformConfig,
     SerializationSettings,
 )
 from flytekit.remote import FlyteRemote
 
 IMAGE_NAME = "pingsutw/flyte-app"
 CHECKPOINT = "checkpoints.json"
+FLYTE_CONFIG = "/Users/kevin/.flyte/config-remote.yaml"
 
 
-def register_and_create_wf(fn):
+def register_and_create_wf(fn, input: typing.Dict, fast: bool = False):
     start = time.time()
 
-    remote, ss = create_flyte_remote(fast=False, cached_image=False)
+    remote, ss = create_flyte_remote(fast=fast, cached_image=True)
     remote.register_workflow(fn, ss)
-    remote.execute(fn, inputs={}, wait=False)
+    remote.execute(fn, inputs=input, wait=False)
 
     end = time.time()
     print("Time Spend:", end - start)
@@ -32,7 +33,7 @@ def register_and_create_wf(fn):
 def create_flyte_remote(
     fast: bool = False,
     cached_image: bool = False,
-    config: str = "/Users/kevin/.flyte/config.yaml",
+    config: str = FLYTE_CONFIG,
 ) -> (flytekit.remote.FlyteRemote, SerializationSettings):
 
     version = UUID(int=random.getrandbits(128)).hex

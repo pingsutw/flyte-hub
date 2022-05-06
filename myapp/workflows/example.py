@@ -9,7 +9,6 @@ def say_hello1() -> int:
 @workflow
 def my_wf() -> int:
     res = say_hello1()
-    print(res)
     return res
 
 

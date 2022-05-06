@@ -1,7 +1,4 @@
-try:
-    from typing import Annotated
-except ImportError:
-    from typing_extensions import Annotated
+from typing_extensions import Annotated
 
 import pandas as pd
 import pyarrow as pa

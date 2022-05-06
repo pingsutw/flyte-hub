@@ -13,8 +13,8 @@
 # remote.execute(enum_types.workflows.example.enum_wf, inputs={"c": "RED"}, wait=False)
 # import raw_container.workflows.example
 # remote.execute(raw_container.workflows.example.wf, inputs={"a": 2.0, "b": 3.0}, wait=False)
-import test.workflows.example
+import flyte_pickle.workflows.example
 
 from utils import register_and_create_wf
 
-register_and_create_wf(test.workflows.example.wf)
+register_and_create_wf(flyte_pickle.workflows.example.welcome, input={"name": "dog"}, fast=True)
