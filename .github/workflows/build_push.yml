@@ -51,4 +51,4 @@ jobs:
         with:
           python-version: 3.8
       - name: Register and execute workflow on flyte cluster
-        run: pip install -r requirements.txt && python production_workflow.py
+        run: pip install -r requirements.txt && pyflyte run --remote development/workflow/my_app my_wf
