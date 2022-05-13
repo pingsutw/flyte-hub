@@ -7,7 +7,7 @@ ENV FLYTE_SDK_USE_STRUCTURED_DATASET=True
 
 RUN pip install markdown plotly pandas_profiling
 
-ARG BRANCH=optional-type
+ARG BRANCH=deck_jupyter
 ARG PLUGIN=deck-standard
 ARG IDL_BRANCH=deck
 

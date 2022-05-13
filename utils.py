@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import subprocess
 import time
@@ -6,6 +7,7 @@ import typing
 from uuid import UUID
 
 import flytekit.remote
+from flytekit.clis.sdk_in_container.run import get_entities_in_file, load_naive_entity
 from flytekit.configuration import (
     Config,
     Image,
@@ -17,12 +19,27 @@ from flytekit.remote import FlyteRemote
 IMAGE_NAME = "pingsutw/flyte-app"
 CHECKPOINT = "checkpoints.json"
 FLYTE_CONFIG = "/Users/kevin/.flyte/config-remote.yaml"
+PROJECT = "flytesnacks"
+DOMAIN = "development"
 
 
-def register_and_create_wf(fn, input: typing.Dict, fast: bool = False):
+def run_all_dev_workflow():
+    dev_dir = "development/workflow/"
+    for file in os.listdir(dev_dir):
+        file_name = dev_dir + file
+        rel_path = os.path.relpath(file_name)
+        entities = get_entities_in_file(file_name)
+        for wf in entities.workflows:
+            module = os.path.splitext(rel_path)[0].replace(os.path.sep, ".")
+            exe_entity = load_naive_entity(module, wf)
+            print(f"Running workflow [{module}.{wf}]")
+            register_and_create_wf(fn=exe_entity, input={})
+
+
+def register_and_create_wf(fn, input: typing.Dict, rebuild_docker: bool = False):
     start = time.time()
 
-    remote, ss = create_flyte_remote(fast=fast, cached_image=True)
+    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=True)
     remote.register_workflow(fn, ss)
     remote.execute(fn, inputs=input, wait=False)
 
@@ -31,14 +48,14 @@ def register_and_create_wf(fn, input: typing.Dict, fast: bool = False):
 
 
 def create_flyte_remote(
-    fast: bool = False,
+    rebuild_docker: bool = False,
     cached_image: bool = False,
     config: str = FLYTE_CONFIG,
 ) -> (flytekit.remote.FlyteRemote, SerializationSettings):
 
     version = UUID(int=random.getrandbits(128)).hex
 
-    if fast is False:
+    if rebuild_docker is True:
         _, err = build_image(IMAGE_NAME, version, cached_image)
         push_image(IMAGE_NAME, version)
         log_version(version)
@@ -49,8 +66,8 @@ def create_flyte_remote(
     return (
         FlyteRemote(
             config=Config.auto(config),
-            default_project="flytesnacks",
-            default_domain="development",
+            default_project=PROJECT,
+            default_domain=DOMAIN,
         ),
         SerializationSettings(
             image_config=ImageConfig(
