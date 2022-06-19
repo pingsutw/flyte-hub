@@ -2,13 +2,13 @@ from flytekit import task, workflow
 
 
 @task
-def say_hello1(a: int) -> int:
+def say_hello1() -> int:
     return 1
 
 
 @workflow
 def my_wf() -> int:
-    res = say_hello1(a=2)
+    res = say_hello1()
     return res
 
 

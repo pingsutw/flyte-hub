@@ -1,9 +1,8 @@
-from typing_extensions import Annotated
-
 import pandas as pd
 import pyarrow as pa
 from flytekit import FlyteContextManager, kwtypes, task, workflow
 from flytekit.types.structured.structured_dataset import PARQUET, StructuredDataset
+from typing_extensions import Annotated
 
 my_cols = kwtypes(Name=str, Age=int)
 fields = [("Name", pa.string()), ("Age", pa.int32())]

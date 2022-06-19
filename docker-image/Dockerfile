@@ -5,11 +5,11 @@ FROM pingsutw/base-${BASE_IMAGE_VERSION:-spark}-flyte-app
 
 ENV FLYTE_SDK_USE_STRUCTURED_DATASET=True
 
-RUN pip install markdown plotly pandas_profiling
+RUN pip install markdown plotly pandas_profiling sklearn
 
-ARG BRANCH=deck_jupyter
+ARG BRANCH=benchmark
 ARG PLUGIN=deck-standard
-ARG IDL_BRANCH=deck
+ARG IDL_BRANCH=master
 
 # Install custom package
 RUN pip install "git+https://github.com/flyteorg/flytekit@$BRANCH#egg=flytekitplugins-$PLUGIN&subdirectory=plugins/flytekit-$PLUGIN"
@@ -18,3 +18,5 @@ RUN pip install git+https://github.com/flyteorg/flytekit@$BRANCH
 
 # Copy the actual code
 COPY ./ /root
+
+ENV FLYTE_SDK_LOGGING_LEVEL=20

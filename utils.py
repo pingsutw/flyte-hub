@@ -8,12 +8,7 @@ from uuid import UUID
 
 import flytekit.remote
 from flytekit.clis.sdk_in_container.run import get_entities_in_file, load_naive_entity
-from flytekit.configuration import (
-    Config,
-    Image,
-    ImageConfig,
-    SerializationSettings,
-)
+from flytekit.configuration import Config, Image, ImageConfig, SerializationSettings
 from flytekit.remote import FlyteRemote
 
 IMAGE_NAME = "pingsutw/flyte-app"
@@ -39,9 +34,27 @@ def run_all_dev_workflow():
 def register_and_create_wf(fn, input: typing.Dict, rebuild_docker: bool = False):
     start = time.time()
 
-    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=True)
+    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=False)
     remote.register_workflow(fn, ss)
     remote.execute(fn, inputs=input, wait=False)
+
+    end = time.time()
+    print("Time Spend:", end - start)
+
+
+def fast_register_and_create_wf(fn, input: typing.Dict, rebuild_docker: bool = False):
+    start = time.time()
+    version = read_version()
+    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=False)
+    remote_entity = remote.register_script(
+        fn,
+        project=PROJECT,
+        domain=DOMAIN,
+        image_config=ImageConfig(
+            default_image=Image(name="default", fqn=IMAGE_NAME, tag=version)
+        ),
+    )
+    remote.execute(remote_entity, inputs=input, wait=False)
 
     end = time.time()
     print("Time Spend:", end - start)
