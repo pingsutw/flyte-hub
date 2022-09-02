@@ -23,8 +23,6 @@ ENV PATH="${VENV}/bin:$PATH"
 COPY requirements.txt /root
 RUN pip install -r /root/requirements.txt
 
-ENV GOOGLE_APPLICATION_CREDENTIALS "/opt/gcp.json"
-
 # This tag is supplied by the build script and will be used to determine the version
 # when registering tasks, workflows, and launch plans
 ARG tag

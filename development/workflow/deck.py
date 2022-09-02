@@ -9,7 +9,7 @@ from typing_extensions import Annotated
 iris_df = px.data.iris()
 
 
-@task()
+@task(cache_version="2.0", cache=True)
 def t1(a: int) -> str:
     md_text = "#Hello Flyte\n##Hello Flyte\n###Hello Flyte"
     flytekit.Deck("demo", BoxRenderer("sepal_length").to_html(iris_df))
@@ -17,7 +17,7 @@ def t1(a: int) -> str:
     return md_text
 
 
-@task()
+@task(cache_version="2.0", cache=True)
 def t2(a: int) -> Annotated[pd.DataFrame, TopFrameRenderer(10)]:
     return iris_df
 

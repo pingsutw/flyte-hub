@@ -92,11 +92,11 @@ def create_flyte_remote(
 
 
 def build_image(
-    image_name: str, version: str, cache: bool = False, base_image: str = "python3.8"
+    image_name: str, version: str, cache: bool = False, base_image: str = "python3.9"
 ) -> (str, str):
-    bashCommand = f"docker build . -f ./docker-image/Dockerfile --tag {image_name}:{version} --build-arg BASE_IMAGE_VERSION={base_image} --no-cache"
-    if cache:
-        bashCommand = f"docker build . -f ./docker-image/Dockerfile --tag {image_name}:{version} --build-arg BASE_IMAGE_VERSION={base_image}"
+    bashCommand = f"docker build . -f ./docker-image/Dockerfile --tag {image_name}:{version} --build-arg BASE_IMAGE_VERSION={base_image}"
+    if not cache:
+        bashCommand = bashCommand + " --no-cache"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     return process.communicate()
 

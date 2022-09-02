@@ -7,6 +7,7 @@ This example shows how to use a Flyte BigQueryTask to execute a query.
 import pandas as pd
 from flytekit import StructuredDataset, kwtypes, task, workflow
 from flytekitplugins.bigquery import BigQueryConfig, BigQueryTask
+from typing_extensions import Annotated
 
 # %%
 # This is the world's simplest query. Note that in order for registration to work properly, you'll need to give your
@@ -16,7 +17,7 @@ bigquery_task_no_io = BigQueryTask(
     inputs={},
     query_template="SELECT 1",
     output_schema_type=None,
-    task_config=BigQueryConfig(ProjectID="photo-313016"),
+    task_config=BigQueryConfig(ProjectID="flyte-test-340607"),
 )
 
 
@@ -34,25 +35,27 @@ def no_io_wf():
 # Let's look out how we can parameterize our query to filter results for a specific transaction version, provided as a user input
 # specifying a version.
 
-DogeCoinDataset = StructuredDataset[kwtypes(hash=str, size=int, block_number=int)]
+DogeCoinDataset = Annotated[
+    StructuredDataset, kwtypes(hash=str, size=int, block_number=int)
+]
 
 bigquery_task_templatized_query = BigQueryTask(
     name="sql.bigquery.w_io",
     # Define inputs as well as their types that can be used to customize the query.
     inputs=kwtypes(version=int),
-    output_structured_dataset_type=DogeCoinDataset,
-    task_config=BigQueryConfig(ProjectID="photo-313016"),
-    query_template="SELECT 1",
+    output_structured_dataset_type=StructuredDataset,
+    task_config=BigQueryConfig(ProjectID="flyte-test-340607"),
+    query_template="SELECT 1;",
 )
 
 
 @task
-def convert_bq_table_to_pandas_dataframe(sd: DogeCoinDataset) -> pd.DataFrame:
+def convert_bq_table_to_pandas_dataframe(sd: StructuredDataset) -> pd.DataFrame:
     return sd.open(pd.DataFrame).all()
 
 
 @workflow
-def full_bigquery_wf(version: int) -> pd.DataFrame:
+def full_bigquery_wf(version: int = 1) -> pd.DataFrame:
     sd = bigquery_task_templatized_query(version=version)
     return convert_bq_table_to_pandas_dataframe(sd=sd)
 

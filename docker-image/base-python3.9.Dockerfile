@@ -25,7 +25,6 @@ RUN pip install -r /root/requirements.txt
 
 RUN pip install pyarrow==6.0.1 pyspark
 RUN pip install fsspec google-cloud-bigquery-storage google-cloud-bigquery s3fs
-ENV GOOGLE_APPLICATION_CREDENTIALS "/opt/gcp.json"
 
 # This tag is supplied by the build script and will be used to determine the version
 # when registering tasks, workflows, and launch plans

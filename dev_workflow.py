@@ -1,4 +1,5 @@
-from development.workflow.optional_type import wf
+from development.workflow.test import wf
+from integration.workflow.bigquery_plugin import full_bigquery_wf
 from utils import (
     create_flyte_remote,
     fast_register_and_create_wf,
@@ -6,5 +7,4 @@ from utils import (
     run_all_dev_workflow,
 )
 
-# register_and_create_wf(wf, input={}, rebuild_docker=False)
-fast_register_and_create_wf(wf, input={}, rebuild_docker=False)
+register_and_create_wf(wf, input={}, rebuild_docker=True)
