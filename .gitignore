@@ -142,3 +142,4 @@ flyte-package.tgz
 test*/
 gcp.json
 test.py
+mlruns

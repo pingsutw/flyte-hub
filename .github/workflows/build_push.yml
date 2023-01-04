@@ -9,41 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        base-image-version: ["python3.7", "python3.8", "python3.9", "python3.10", "spark"]
-    defaults:
-      run:
-        working-directory: ./
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
-      - name: Push base-flyte-app Docker Image to Github Registry
-        uses: whoan/docker-build-with-cache-action@v5
-        with:
-          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: ${{ github.repository_owner }}/base-${{ matrix.base-image-version }}-flyte-app
-          image_tag: latest
-          push_git_tag: true
-          registry: docker.io
-          build_extra_args: "--compress=true"
-          context: ./
-          dockerfile: docker-image/base-${{ matrix.base-image-version }}.Dockerfile
-      - name: Push flyte-app Docker Image to Github Registry
-        uses: whoan/docker-build-with-cache-action@v5
-        with:
-          # https://docs.github.com/en/packages/learn-github-packages/publishing-a-package
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: ${{ github.repository_owner }}/flyte-app-${{ matrix.base-image-version }}
-          image_tag: latest
-          push_git_tag: true
-          registry: docker.io
-          build_extra_args: "--compress=true --build-arg=BASE_IMAGE_VERSION=${{ matrix.base-image-version }}"
-          context: ./
-          dockerfile: docker-image/Dockerfile
       - name: Start flyte sandbox
         run: curl -sL https://ctl.flyte.org/install | bash && ./bin/flytectl sandbox start
       - name: Set up Python

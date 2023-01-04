@@ -7,15 +7,20 @@ import typing
 from uuid import UUID
 
 import flytekit.remote
+from flytekit import SecurityContext
 from flytekit.clis.sdk_in_container.run import get_entities_in_file, load_naive_entity
 from flytekit.configuration import Config, Image, ImageConfig, SerializationSettings
+from flytekit.models.security import Identity
 from flytekit.remote import FlyteRemote
+from flytekit.tools.translator import Options
 
 IMAGE_NAME = "pingsutw/flyte-app"
 CHECKPOINT = "checkpoints.json"
 FLYTE_CONFIG = "/Users/kevin/.flyte/config-remote.yaml"
 PROJECT = "flytesnacks"
 DOMAIN = "development"
+SERVICE_ACCOUNT = "default"
+DOCKER_FILE = "Dockerfile"
 
 
 def run_all_dev_workflow():
@@ -31,28 +36,49 @@ def run_all_dev_workflow():
             register_and_create_wf(fn=exe_entity, input={})
 
 
-def register_and_create_wf(fn, input: typing.Dict, rebuild_docker: bool = False):
+def register_and_create_wf(
+    fn, input: typing.Dict, rebuild_docker: bool = False, cached_image: bool = False
+):
     start = time.time()
 
-    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=False)
+    remote, ss = create_flyte_remote(
+        rebuild_docker=rebuild_docker, cached_image=cached_image
+    )
     remote.register_workflow(fn, ss)
-    remote.execute(fn, inputs=input, wait=False)
+    options = Options(
+        security_context=SecurityContext(
+            run_as=Identity(k8s_service_account=SERVICE_ACCOUNT)
+        )
+    )
+    remote.execute(fn, inputs=input, wait=False, options=options)
 
     end = time.time()
     print("Time Spend:", end - start)
 
 
-def fast_register_and_create_wf(fn, input: typing.Dict, rebuild_docker: bool = False):
+def fast_register_and_create_wf(
+    fn, input: typing.Dict, rebuild_docker: bool = False, cached_image: bool = False
+):
     start = time.time()
+    remote, ss = create_flyte_remote(
+        rebuild_docker=rebuild_docker, cached_image=cached_image
+    )
     version = read_version()
-    remote, ss = create_flyte_remote(rebuild_docker=rebuild_docker, cached_image=False)
+    options = Options(
+        security_context=SecurityContext(
+            run_as=Identity(k8s_service_account=SERVICE_ACCOUNT)
+        )
+    )
     remote_entity = remote.register_script(
         fn,
         project=PROJECT,
         domain=DOMAIN,
+        options=options,
         image_config=ImageConfig(
             default_image=Image(name="default", fqn=IMAGE_NAME, tag=version)
         ),
+        source_path=".",
+        module_name="integration.workflow.databricks",
     )
     remote.execute(remote_entity, inputs=input, wait=False)
 
@@ -70,6 +96,8 @@ def create_flyte_remote(
 
     if rebuild_docker is True:
         _, err = build_image(IMAGE_NAME, version, cached_image)
+        if err:
+            raise Exception("Failed to build the image")
         push_image(IMAGE_NAME, version)
         log_version(version)
     else:
@@ -92,9 +120,9 @@ def create_flyte_remote(
 
 
 def build_image(
-    image_name: str, version: str, cache: bool = False, base_image: str = "python3.9"
+    image_name: str, version: str, cache: bool = False, python_version: str = "3.9"
 ) -> (str, str):
-    bashCommand = f"docker build . -f ./docker-image/Dockerfile --tag {image_name}:{version} --build-arg BASE_IMAGE_VERSION={base_image}"
+    bashCommand = f"docker build . -f ./docker-image/{DOCKER_FILE} --tag {image_name}:{version} --build-arg PYTHON_VERSION={python_version}"
     if not cache:
         bashCommand = bashCommand + " --no-cache"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)

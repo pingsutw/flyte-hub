@@ -8,7 +8,11 @@ Install python dependencies
 ```bash
 pip install -r requirements.txt
 ```
-
+## Start Flyte dev cluster locally
+```shell
+flytectl demo start --dev --image pingsutw/sandbox-lite-test
+flyte start --config flyte_local.yaml
+```
 ## Quick Start (flytekit)
 ```python
 from utils import register_and_create_wf

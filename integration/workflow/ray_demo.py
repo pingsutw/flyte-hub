@@ -17,7 +17,11 @@ ray_config = RayJobConfig(
 )
 
 
-@task(task_config=ray_config, limits=Resources(mem="2000Mi", cpu="2"))
+@task(
+    task_config=ray_config,
+    requests=Resources(mem="1000Mi", cpu="1"),
+    limits=Resources(mem="2000Mi", cpu="2"),
+)
 def ray_task() -> typing.List[int]:
     futures = [f.remote(i) for i in range(5)]
     return ray.get(futures)

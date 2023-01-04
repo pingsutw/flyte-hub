@@ -12,13 +12,13 @@ from flytekitplugins.snowflake import SnowflakeConfig, SnowflakeTask
 # %%
 # This is the world's simplest query. Note that in order for registration to work properly, you'll need to give your
 # Snowflake task a name that's unique across your project/domain for your Flyte installation.
-snowflake_task_no_io = SnowflakeTask(
-    name="sql.snowflake.no_io",
+snowflake_task_no_io1 = SnowflakeTask(
+    name="sql.snowflake.no_io1",
     inputs={},
-    query_template="SELECT * from CUSTOMER limit 100",
+    query_template="""SELECT * from \n CUSTOMER limit 99""",
     output_schema_type=None,
     task_config=SnowflakeConfig(
-        account="ha63105.us-central1.gcp",
+        account="cs31749.ap-northeast-2.aws",
         database="SNOWFLAKE_SAMPLE_DATA",
         schema="TPCH_SF1000",
         warehouse="COMPUTE_WH",
@@ -28,7 +28,7 @@ snowflake_task_no_io = SnowflakeTask(
 
 @workflow
 def no_io_wf():
-    return snowflake_task_no_io()
+    return snowflake_task_no_io1()
 
 
 # %%
@@ -63,7 +63,7 @@ snowflake_task_templatized_query = SnowflakeTask(
     # Define inputs as well as their types that can be used to customize the query.
     inputs=kwtypes(nation_key=int),
     task_config=SnowflakeConfig(
-        account="ha63105.us-central1.gcp",
+        account="cs31749.ap-northeast-2.aws",
         database="SNOWFLAKE_SAMPLE_DATA",
         schema="TPCH_SF1000",
         warehouse="COMPUTE_WH",

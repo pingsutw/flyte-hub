@@ -1,5 +1,6 @@
-from development.workflow.test import wf
-from integration.workflow.bigquery_plugin import full_bigquery_wf
+from development.workflow.my_app import my_wf
+
+# from integration.workflow.aws_batch import wf
 from utils import (
     create_flyte_remote,
     fast_register_and_create_wf,
@@ -7,4 +8,8 @@ from utils import (
     run_all_dev_workflow,
 )
 
-register_and_create_wf(wf, input={}, rebuild_docker=True)
+# Register and run a new workflow
+# 1. Add a new workflow to the development directory
+# 2. Update python dependency in the dockerfile
+# 3. Update flyte config in util.py if needed
+register_and_create_wf(my_wf, input={}, rebuild_docker=True, cached_image=True)

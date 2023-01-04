@@ -6,12 +6,14 @@ from flytekit import Resources, map_task, task, workflow
 @task
 def a_mappable_task(a: int):
     inc = a + 2
+    raise Exception
     stringified = str(inc)
 
 
 @task
 def coalesce(b: List[str]) -> str:
     coalesced = "".join(b)
+    raise Exception
     return coalesced
 
 

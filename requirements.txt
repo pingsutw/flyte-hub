@@ -1,7 +1,0 @@
-flytekit>=v0.30.0b3
-fsspec
-google-cloud-bigquery-storage
-google-cloud-bigquery
-s3fs
-pyarrow==6.0.1
-flytekitplugins-snowflake
