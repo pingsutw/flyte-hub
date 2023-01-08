@@ -1,4 +1,4 @@
-from development.workflow.my_app import my_wf
+from development.workflow.test import wf
 
 # from integration.workflow.aws_batch import wf
 from utils import (
@@ -12,4 +12,4 @@ from utils import (
 # 1. Add a new workflow to the development directory
 # 2. Update python dependency in the dockerfile
 # 3. Update flyte config in util.py if needed
-register_and_create_wf(my_wf, input={}, rebuild_docker=True, cached_image=True)
+register_and_create_wf(wf, input={}, rebuild_docker=True, cached_image=True)

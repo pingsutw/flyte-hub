@@ -16,11 +16,11 @@ from flytekit.tools.translator import Options
 
 IMAGE_NAME = "pingsutw/flyte-app"
 CHECKPOINT = "checkpoints.json"
-FLYTE_CONFIG = "/Users/kevin/.flyte/config-remote.yaml"
+FLYTE_CONFIG = "/Users/kevin/.flyte/config-sandbox.yaml"
 PROJECT = "flytesnacks"
 DOMAIN = "development"
 SERVICE_ACCOUNT = "default"
-DOCKER_FILE = "Dockerfile"
+DOCKER_FILE = "aws-batch.Dockerfile"
 
 
 def run_all_dev_workflow():
