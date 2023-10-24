@@ -8,17 +8,19 @@ jobs:
     name: Push to docker hub
     runs-on: ubuntu-latest
     strategy:
+      matrix:
+        python-version: [3.8]
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: "0"
       - name: Start flyte sandbox
-        run: curl -sL https://ctl.flyte.org/install | bash && ./bin/flytectl sandbox start
+        run: curl -sL https://ctl.flyte.org/install | bash && ./bin/flytectl demo start
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
       - name: Register and execute workflow on flyte cluster
         env:
           FLYTECTL_CONFIG: /home/runner/.flyte/config-sandbox.yaml

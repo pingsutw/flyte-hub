@@ -4,16 +4,15 @@ from flytekit import Resources, map_task, task, workflow
 
 
 @task
-def a_mappable_task(a: int):
+def a_mappable_task(a: int) -> str:
     inc = a + 2
-    raise Exception
     stringified = str(inc)
+    return "hello"
 
 
 @task
 def coalesce(b: List[str]) -> str:
     coalesced = "".join(b)
-    raise Exception
     return coalesced
 
 
@@ -26,7 +25,7 @@ def g_l(n: int) -> List[int]:
 
 
 @workflow
-def wf(n: int = 1000) -> str:
+def wf(n: int = 10) -> str:
     l = g_l(n=n)
     map_task(a_mappable_task)(a=l)
     coalesced = coalesce(b=["1", "2"])
