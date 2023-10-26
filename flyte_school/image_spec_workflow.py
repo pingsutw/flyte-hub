@@ -1,6 +1,7 @@
 from flytekit import task, workflow, ImageSpec
 
-image_spec = ImageSpec(registry="pingsutw", packages=["tensorflow"], apt_packages=["git"])
+
+image_spec = ImageSpec(registry="pingsutw", packages=["tensorflow", "mypy"])
 
 
 @task(container_image=image_spec)

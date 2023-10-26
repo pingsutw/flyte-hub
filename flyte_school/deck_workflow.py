@@ -14,15 +14,15 @@ image_spec = ImageSpec(registry="pingsutw", packages=["flytekitplugins-deck-stan
 
 @task(enable_deck=True, container_image=image_spec)
 def frame_renderer() -> None:
-    iris = load_diabetes()
-    df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+    diabetes = load_diabetes()
+    df = pd.DataFrame(data=diabetes.data, columns=diabetes.feature_names)
     flytekit.Deck("Frame Renderer", FrameProfilingRenderer().to_html(df=df))
 
 
 @task(enable_deck=True, container_image=image_spec)
 def table_renderer() -> None:
-    iris = load_diabetes()
-    df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+    diabetes = load_diabetes()
+    df = pd.DataFrame(data=diabetes.data, columns=diabetes.feature_names)
     flytekit.Deck(
         "Table Renderer",
         TableRenderer().to_html(df=df, table_width=50),
@@ -30,11 +30,14 @@ def table_renderer() -> None:
 
 
 class ImageRenderer:
+    def __init__(self, img_format="PNG"):
+        self._img_format = img_format
+
     def to_html(self, image: PIL.Image.Image) -> str:
         import base64
         from io import BytesIO
         buffered = BytesIO()
-        image.save(buffered, format="PNG")
+        image.save(buffered, format=self._img_format)
         img_base64 = base64.b64encode(buffered.getvalue()).decode()
         return f'<img src="data:image/png;base64,{img_base64}" alt="Rendered Image" />'
 
