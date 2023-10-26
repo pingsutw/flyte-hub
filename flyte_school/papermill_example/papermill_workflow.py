@@ -1,9 +1,8 @@
 import typing
 
-from flytekit import ImageSpec, task, Resources
+from flytekit import ImageSpec, Resources
 import os
 import pathlib
-
 from flytekit import kwtypes, workflow
 from flytekitplugins.papermill import NotebookTask
 
@@ -17,14 +16,13 @@ nb = NotebookTask(
     requests=Resources(cpu="1", mem="2Gi"), limits=Resources(cpu="1", mem="2Gi"),
     container_image=image_spec,
     inputs=kwtypes(epochs=int),
-    outputs=kwtypes(model=typing.Any),
     enable_deck=True,
 )
 
 
 @workflow
-def nb_to_python_wf(f: int = 5) -> typing.Any:
-    return nb(epochs=f)
+def nb_to_python_wf(f: int = 5):
+    nb(epochs=f)
 
 
 if __name__ == "__main__":
