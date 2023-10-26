@@ -8,6 +8,13 @@ custom_image = ImageSpec(
     packages=["flytekitplugins-ray"],
 )
 
+
+ray_config = RayJobConfig(
+    head_node_config=HeadNodeConfig(ray_start_params={"log-color": "False"}),
+    worker_node_config=[WorkerNodeConfig(group_name="ray-group", replicas=1)],
+)
+
+
 @ray.remote
 def f1(x):
     return x * x
@@ -18,18 +25,7 @@ def f2(x):
     return x % 2
 
 
-ray_config = RayJobConfig(
-    head_node_config=HeadNodeConfig(ray_start_params={"log-color": "False"}),
-    worker_node_config=[WorkerNodeConfig(group_name="ray-group", replicas=1)],
-    runtime_env={"pip": ["numpy", "pandas"]},  # or runtime_env="./requirements.txt"
-)
-
-
-@task(cache=False, cache_version="0.5",
-      task_config=ray_config,
-      requests=Resources(mem="900Mi", cpu="1"),
-      container_image=custom_image,
-      )
+@task(requests=Resources(mem="900Mi", cpu="1"), container_image=custom_image, task_config=ray_config)
 def ray_task(n: int) -> int:
     futures = [f2.remote(f1.remote(i)) for i in range(n)]
     return sum(ray.get(futures))

@@ -5,7 +5,8 @@ import pandas as pd
 from flytekit import StructuredDataset, kwtypes, task, workflow
 import pyarrow as pa
 
-MyDataset = Annotated[StructuredDataset, kwtypes(name=str, age=int)]
+MyDataset = Annotated[StructuredDataset, kwtypes(name=str)]
+
 
 @task
 def create_bq_table() -> StructuredDataset:
@@ -23,7 +24,7 @@ bigquery_task_templatized_query = BigQueryTask(
 
 
 @task
-def convert_bq_table_to_pandas_dataframe(sd: MyDataset) -> pa.Table:
+def convert_bq_table_to_arrow_table(sd: MyDataset) -> pa.Table:
     t = sd.open(pa.Table).all()
     print(t)
     return t
@@ -33,7 +34,7 @@ def convert_bq_table_to_pandas_dataframe(sd: MyDataset) -> pa.Table:
 def wf(version: int = 10) -> pa.Table:
     create_bq_table()
     sd = bigquery_task_templatized_query(version=version)
-    return convert_bq_table_to_pandas_dataframe(sd=sd)
+    return convert_bq_table_to_arrow_table(sd=sd)
 
 
 if __name__ == '__main__':

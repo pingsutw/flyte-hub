@@ -1,6 +1,6 @@
-import math
+import typing
 
-from flytekit import ImageSpec, task
+from flytekit import ImageSpec, task, Resources
 import os
 import pathlib
 
@@ -8,28 +8,23 @@ from flytekit import kwtypes, workflow
 from flytekitplugins.papermill import NotebookTask
 
 
-image = ImageSpec(packages=["flytekitplugins-papermill"], registry="pingsutw")
-
+image_spec = ImageSpec(registry="pingsutw", packages=["flytekitplugins-papermill", "tensorflow==2.12.0"], apt_packages=["git"])
 
 nb = NotebookTask(
     name="simple-nb",
     notebook_path=os.path.join(pathlib.Path(__file__).parent.absolute(), "nb_simple.ipynb"),
     render_deck=True,
-    container_image=image,
-    inputs=kwtypes(v=float),
-    outputs=kwtypes(square=float),
+    requests=Resources(cpu="1", mem="2Gi"), limits=Resources(cpu="1", mem="2Gi"),
+    container_image=image_spec,
+    inputs=kwtypes(epochs=int),
+    outputs=kwtypes(model=typing.Any),
     enable_deck=True,
 )
 
 
-@task(container_image=image)
-def square_root_task(f: float) -> float:
-    return math.sqrt(f)
-
-
 @workflow
-def nb_to_python_wf(f: float = 2.0):
-    out = nb(v=f)
+def nb_to_python_wf(f: int = 5) -> typing.Any:
+    return nb(epochs=f)
 
 
 if __name__ == "__main__":

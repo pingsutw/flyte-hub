@@ -34,7 +34,7 @@ def train_model(epochs: int):
 
 
 @workflow
-def ml_pipeline(epochs: int = 100):
+def ml_pipeline(epochs: int = 20):
     train_model(epochs=epochs)
 
 
