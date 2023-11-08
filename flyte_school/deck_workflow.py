@@ -1,15 +1,16 @@
 import io
 
-import PIL.Image
+import flytekit
 import pandas as pd
+import PIL.Image
 import requests
+from flytekit import ImageSpec, task, workflow
+from flytekitplugins.deck.renderer import FrameProfilingRenderer, TableRenderer
 from sklearn.datasets import load_diabetes
 
-import flytekit
-from flytekit import task, workflow, ImageSpec
-from flytekitplugins.deck.renderer import FrameProfilingRenderer, TableRenderer
-
-image_spec = ImageSpec(registry="pingsutw", packages=["flytekitplugins-deck-standard", "pillow"])
+image_spec = ImageSpec(
+    registry="pingsutw", packages=["flytekitplugins-deck-standard", "pillow"]
+)
 
 
 @task(enable_deck=True, container_image=image_spec)
@@ -36,6 +37,7 @@ class ImageRenderer:
     def to_html(self, image: PIL.Image.Image) -> str:
         import base64
         from io import BytesIO
+
         buffered = BytesIO()
         image.save(buffered, format=self._img_format)
         img_base64 = base64.b64encode(buffered.getvalue()).decode()
@@ -61,5 +63,5 @@ def wf():
     image_renderer()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     wf()

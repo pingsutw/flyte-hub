@@ -143,3 +143,4 @@ test*/
 gcp.json
 test.py
 mlruns
+values-eks.yaml

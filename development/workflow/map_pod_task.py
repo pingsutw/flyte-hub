@@ -1,9 +1,8 @@
 from typing import List
 
+from flytekit import TaskMetadata, map_task, task, workflow
 from flytekitplugins.pod import Pod
-from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
-
-from flytekit import map_task, task, workflow, TaskMetadata
+from kubernetes.client import V1Container, V1PodSpec, V1ResourceRequirements
 
 
 @task(

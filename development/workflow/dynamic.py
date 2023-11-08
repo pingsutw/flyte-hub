@@ -46,14 +46,12 @@ def count_characters(s1: str, s2: str) -> int:
 
     # looping through the string s1
     for i in range(len(s1)):
-
         # index and freq1 are not accessible as they are promises
         index = return_index(character=s1[i])
         freq1 = update_list(freq_list=freq1, list_index=index)
 
     # looping through the string s2
     for i in range(len(s2)):
-
         # index and freq2 are not accessible as they are promises
         index = return_index(character=s2[i])
         freq2 = update_list(freq_list=freq2, list_index=index)

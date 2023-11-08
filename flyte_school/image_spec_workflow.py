@@ -1,12 +1,12 @@
-from flytekit import task, workflow, ImageSpec
+from flytekit import ImageSpec, task, workflow
+
+image = ImageSpec(registry="pingsutw", packages=["tensorflow", "mypy", "numpy"])
 
 
-image_spec = ImageSpec(registry="pingsutw", packages=["tensorflow", "mypy"])
-
-
-@task(container_image=image_spec)
+@task(container_image=image)
 def t1() -> None:
     import tensorflow
+
     print("hello")
 
 

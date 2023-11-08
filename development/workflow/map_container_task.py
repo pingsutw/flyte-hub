@@ -1,7 +1,7 @@
 import typing
 from typing import List
 
-from flytekit import map_task, task, workflow, ContainerTask, kwtypes
+from flytekit import ContainerTask, kwtypes, map_task, task, workflow
 
 calculate_ellipse_area_shell = ContainerTask(
     name="ellipse-area-metadata-python",
