@@ -24,4 +24,4 @@ jobs:
       - name: Register and execute workflow on flyte cluster
         env:
           FLYTECTL_CONFIG: /home/runner/.flyte/config-sandbox.yaml
-        run: pip install flytekit && pyflyte run --remote development/workflow/my_app my_wf
+        run: pip install -U flytekit && pyflyte run --remote development/workflow/my_app.py my_wf
